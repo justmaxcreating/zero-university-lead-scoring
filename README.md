@@ -25,3 +25,17 @@ Scoring rules and the integration-points check are documented in the shared Goog
 ## Output
 
 `output/reply_labels.csv` has one row per reply (840): `reply_id`, `account_id`, `label`, `confidence`, `rationale`. The labels were assigned by Claude following `prompts/label_replies.md`, because the free model was too slow, and match `scripts/label_replies.py` on all 840 rows.
+
+## Call list and rep lookup page
+
+```bash
+python scripts/build_call_list.py "Notion/<workspaces>.csv" "Notion/<replies>.csv" output/reply_labels.csv output/call_list.csv
+python scripts/write_call_list_sheet.py output/call_list.csv output/call_list.xlsx
+python scripts/build_dashboard.py output/call_list.csv dashboard/index.html
+```
+
+- `build_call_list.py` scores all 1,200 accounts 0 to 100 from usage signals plus the latest reply label, applies the overrides (opt-outs, students, schools, personal domains, already paying) and assigns the team bands: Call now 80-100, Call this week 50-79, Nurture 0-49. Rank is by score. Each account gets a one-line reason.
+- `write_call_list_sheet.py` writes the call list plus a Notes tab (key prompt, top-100 check, scoring changes) for Google Sheets.
+- `build_dashboard.py` builds the rep lookup page from `dashboard/template.html`: `dashboard/index.html` (data embedded, opens from disk) and `dashboard/artifact/` (page plus `data.json`).
+
+The generated call list, workbook and pages hold every account's data and are gitignored.

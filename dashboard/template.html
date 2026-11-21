@@ -1,0 +1,275 @@
+<title>Q3 2026 Call List</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Space+Grotesk:wght@600;700&display=swap">
+<style>
+  /* Layout: lookup panel beside the account card, full ranked table below. */
+  :root {
+    --font-body: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --font-head: "Space Grotesk", "Inter", -apple-system, "Segoe UI", sans-serif;
+    --bg: #f6f7f9; --panel: #ffffff; --ink: #16181d; --muted: #5d6470; --line: #e2e5ea;
+    --accent: #2f5fd0; --now: #b42318; --now-bg: #fde8e6; --week: #9a5b00; --week-bg: #fdf1dc;
+    --on-accent: #ffffff; --nur: #3f4a5a; --nur-bg: #eceff3; --paid: #05603a; --paid-bg: #e3f6ec; --warn-bg: #fff4e5; --warn: #8a4b00;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #111317; --panel: #1a1d23; --ink: #eef0f3; --muted: #a3aab5; --line: #2c313a;
+      --accent: #7aa2ff; --now: #ff8a80; --now-bg: #3a1b19; --week: #ffc266; --week-bg: #3a2c14;
+      --on-accent: #0d1220; --nur: #c3cad5; --nur-bg: #262a31; --paid: #6ee7a8; --paid-bg: #12301f; --warn-bg: #3a2c14; --warn: #ffc266;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+      --bg: #111317; --panel: #1a1d23; --ink: #eef0f3; --muted: #a3aab5; --line: #2c313a;
+      --accent: #7aa2ff; --now: #ff8a80; --now-bg: #3a1b19; --week: #ffc266; --week-bg: #3a2c14;
+      --on-accent: #0d1220; --nur: #c3cad5; --nur-bg: #262a31; --paid: #6ee7a8; --paid-bg: #12301f; --warn-bg: #3a2c14; --warn: #ffc266;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+         font: 15px/1.45 var(--font-body); }
+  h1, h2 { font-family: var(--font-head); text-wrap: balance; }
+  main { max-width: 1180px; margin: 0 auto; padding-block: 24px 64px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .panel { min-width: 0; }
+  body { overflow-x: clip; }
+  button:focus-visible, input:focus-visible, select:focus-visible, tbody tr:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .stat .v, .count { font-variant-numeric: tabular-nums; }
+  h1 { font-size: 24px; margin: 0 0 4px; }
+  h2 { font-size: 16px; margin: 0 0 12px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 18px; margin-bottom: 18px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  @media (max-width: 860px) { .grid { grid-template-columns: 1fr; } }
+  label { display: block; font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+  input, select, button { font: inherit; color: var(--ink); }
+  input[type=text], select { width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 8px; background: var(--panel); }
+  .row { display: flex; gap: 8px; align-items: flex-end; flex-wrap: wrap; }
+  .row > .grow { flex: 1 1 220px; }
+  button { padding: 9px 14px; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: var(--on-accent); cursor: pointer; white-space: nowrap; }
+  button.ghost { background: transparent; color: var(--accent); }
+  .field { margin-bottom: 12px; }
+  .msg { padding: 12px 14px; border-radius: 8px; background: var(--warn-bg); color: var(--warn); }
+  .card .top { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: baseline; margin-bottom: 10px; }
+  .card .id { font-weight: 700; font-size: 18px; }
+  .card .name { color: var(--muted); }
+  .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+  .stat { border: 1px solid var(--line); border-radius: 8px; padding: 10px 12px; }
+  .stat .k { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+  .stat .v { font-size: 22px; font-weight: 700; }
+  .reason { font-size: 17px; border-left: 4px solid var(--accent); padding: 6px 12px; margin: 10px 0; }
+  .paid { background: var(--paid-bg); color: var(--paid); border-radius: 8px; padding: 10px 12px; font-weight: 600; margin-bottom: 10px; }
+  .meta { color: var(--muted); font-size: 13px; }
+  .pill { display: inline-block; padding: 2px 9px; border-radius: 999px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .b-now { color: var(--now); background: var(--now-bg); }
+  .b-week { color: var(--week); background: var(--week-bg); }
+  .b-nur { color: var(--nur); background: var(--nur-bg); }
+  .p-paid { color: var(--paid); background: var(--paid-bg); }
+  .matches { list-style: none; padding: 0; margin: 10px 0 0; max-height: 260px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
+  .matches li { padding: 8px 12px; border-bottom: 1px solid var(--line); cursor: pointer; }
+  .matches li:last-child { border-bottom: 0; }
+  .matches li:hover { background: var(--nur-bg); }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; position: sticky; top: 0; background: var(--panel); }
+  tbody tr { cursor: pointer; }
+  tbody tr:hover { background: var(--nur-bg); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  td:nth-child(2) { white-space: nowrap; }
+  .tablewrap { max-height: 620px; overflow: auto; border: 1px solid var(--line); border-radius: 8px; }
+  .filters { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; align-items: end; }
+  @media (max-width: 860px) { .filters { grid-template-columns: 1fr 1fr; } .stats { grid-template-columns: 1fr; } }
+  .check { display: flex; gap: 8px; align-items: center; padding-bottom: 9px; }
+  .count { color: var(--muted); font-size: 13px; margin: 0 0 8px; }
+</style>
+<main>
+  <h1>Q3 2026 Call List</h1>
+  <p class="sub" id="summary">Loading 1,200 accounts…</p>
+
+  <div class="grid">
+    <section class="panel">
+      <h2>Look up an account</h2>
+      <div class="field">
+        <label for="q">Account ID (ACC-#####) or workspace name</label>
+        <div class="row">
+          <div class="grow"><input id="q" type="text" list="names" autocomplete="off" placeholder="e.g. ACC-10587 or Design Studio"></div>
+          <button id="go">Look up</button>
+        </div>
+        <datalist id="names"></datalist>
+      </div>
+      <div class="field">
+        <label for="pick">Or pick from the list</label>
+        <select id="pick"><option value="">Choose an account…</option></select>
+      </div>
+      <div class="field">
+        <label for="paidpick">Paying accounts (60)</label>
+        <select id="paidpick"><option value="">Choose a paying account…</option></select>
+      </div>
+      <div class="row">
+        <button class="ghost" id="topstudent">Highest-ranked school / student account</button>
+      </div>
+    </section>
+
+    <section class="panel" id="result" aria-live="polite">
+      <h2>Account</h2>
+      <p class="meta">Look up an account to see its rank, score, call priority band and reason.</p>
+    </section>
+  </div>
+
+  <section class="panel">
+    <h2>All accounts</h2>
+    <div class="filters">
+      <div><label for="fband">Call priority band</label>
+        <select id="fband">
+          <option value="">All bands</option>
+          <option>Call now</option><option>Call this week</option><option>Nurture</option>
+        </select></div>
+      <div><label for="frep">Rep</label><select id="frep"><option value="">All reps</option></select></div>
+      <div><label for="ftext">Filter by ID or name</label><input id="ftext" type="text" placeholder="Type to filter"></div>
+      <div class="check"><input id="fpaid" type="checkbox"><label for="fpaid" style="margin:0">Paying accounts only</label></div>
+    </div>
+    <p class="count" id="count"></p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Rank</th><th>Account</th><th>Workspace</th><th>Rep</th><th class="num">Score</th><th>Band</th><th>Reason</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script>
+const DATA_INLINE = /*DATA*/null;
+const META = /*META*/;
+let DATA = [], TOTAL = 0, byId = new Map();
+const BAND_CLASS = { "Call now": "b-now", "Call this week": "b-week", "Nurture": "b-nur" };
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const norm = s => String(s).toLowerCase().replace(/\s+/g, " ").trim();
+const fmt = n => n.toLocaleString("en-US");
+
+// "  acc-10342", "ACC 10342", "10342" -> "ACC-10342"; anything else -> null
+function toId(raw) {
+  const s = String(raw).replace(/\s+/g, "").toUpperCase();
+  const m = s.match(/^(?:ACC-?)?(\d{5})$/);
+  return m ? "ACC-" + m[1] : null;
+}
+
+function bandPill(b) { return `<span class="pill ${BAND_CLASS[b]}">${esc(b)}</span>`; }
+
+const result = document.getElementById("result");
+
+function showAccount(a) {
+  const paid = a.paid
+    ? `<div class="paid">Already a paying customer: ${esc(a.plan)} since ${esc(a.since)}. Do not pitch an upgrade.</div>` : "";
+  result.innerHTML = `
+    <h2>Account</h2>
+    <div class="card">
+      <div class="top"><span class="id">${esc(a.id)}</span><span class="name">${esc(a.name)}</span>
+        ${a.paid ? '<span class="pill p-paid">Paying customer</span>' : ""}</div>
+      ${paid}
+      <div class="stats">
+        <div class="stat"><div class="k">Rank</div><div class="v">${fmt(a.rank)} <span class="meta">of ${fmt(TOTAL)}</span></div></div>
+        <div class="stat"><div class="k">Score</div><div class="v">${a.score} <span class="meta">/ 100</span></div></div>
+        <div class="stat"><div class="k">Call priority</div><div class="v" style="font-size:16px;padding-top:6px">${bandPill(a.band)}</div></div>
+      </div>
+      <div class="reason">${esc(a.reason)}</div>
+      <div class="meta">Rep: ${esc(a.rep)} · ${esc(a.domain)} (${esc(a.dtype)})</div>
+    </div>`;
+}
+
+function showMessage(html) {
+  result.innerHTML = `<h2>Account</h2><div class="msg">${html}</div>`;
+}
+
+function showMatches(list, query) {
+  result.innerHTML = `<h2>Account</h2>
+    <p class="meta">${list.length} workspaces match “${esc(query)}”. Pick one:</p>
+    <ul class="matches">${list.map(a =>
+      `<li data-id="${esc(a.id)}">#${fmt(a.rank)} · <strong>${esc(a.id)}</strong> · ${esc(a.name)} · ${esc(a.rep)} · ${a.score} ${bandPill(a.band)}</li>`).join("")}</ul>`;
+  result.querySelectorAll("li").forEach(li => li.addEventListener("click", () => showAccount(byId.get(li.dataset.id))));
+}
+
+function lookup(raw) {
+  const text = String(raw || "");
+  if (!text.trim()) { showMessage("Type an account ID like ACC-10587, or part of a workspace name."); return; }
+  // a datalist pick looks like "ACC-10587 · Workspace name"
+  const head = text.split("·")[0];
+  const id = toId(head) || toId(text);
+  if (id) {
+    const a = byId.get(id);
+    if (a) { showAccount(a); return; }
+    showMessage(`<strong>${esc(id)}</strong> is not in this call list. The list holds the ${fmt(TOTAL)} accounts flagged in Q3 2026 (${esc(META.first)} to ${esc(META.last)}), so this account has no rank, score or band. Don't guess one; ask for it to be added to the next list.`);
+    return;
+  }
+  const q = norm(text);
+  const hits = DATA.filter(a => norm(a.name).includes(q) || norm(a.domain).includes(q));
+  if (hits.length === 1) { showAccount(hits[0]); return; }
+  if (hits.length > 1) { showMatches(hits, text.trim()); return; }
+  showMessage(`No account ID or workspace name matches “${esc(text.trim())}”. Account IDs use the ACC-##### format.`);
+}
+
+function start(rows) {
+  DATA = rows; TOTAL = rows.length; byId = new Map(rows.map(a => [a.id, a]));
+// ---------- wire up lookup ----------
+const q = document.getElementById("q");
+document.getElementById("go").addEventListener("click", () => lookup(q.value));
+q.addEventListener("keydown", e => { if (e.key === "Enter") lookup(q.value); });
+q.addEventListener("change", () => { if (q.value.includes("·")) lookup(q.value); });
+
+document.getElementById("names").innerHTML =
+  DATA.map(a => `<option value="${esc(a.id)} · ${esc(a.name)}"></option>`).join("");
+
+const pick = document.getElementById("pick");
+pick.insertAdjacentHTML("beforeend",
+  DATA.map(a => `<option value="${esc(a.id)}">#${a.rank} · ${esc(a.id)} · ${esc(a.name)}</option>`).join(""));
+pick.addEventListener("change", () => { if (pick.value) showAccount(byId.get(pick.value)); });
+
+const paidpick = document.getElementById("paidpick");
+paidpick.insertAdjacentHTML("beforeend",
+  DATA.filter(a => a.paid).map(a => `<option value="${esc(a.id)}">${esc(a.id)} · ${esc(a.name)} (${esc(a.plan)})</option>`).join(""));
+paidpick.addEventListener("change", () => { if (paidpick.value) showAccount(byId.get(paidpick.value)); });
+
+document.getElementById("topstudent").addEventListener("click", () => {
+  const a = DATA.find(x => x.dtype === "university" || x.dtype === "k12_school");  // DATA is sorted by rank
+  showAccount(a);
+});
+
+// ---------- table ----------
+const fband = document.getElementById("fband"), frep = document.getElementById("frep"),
+      ftext = document.getElementById("ftext"), fpaid = document.getElementById("fpaid");
+[...new Set(DATA.map(a => a.rep))].sort().forEach(r => frep.insertAdjacentHTML("beforeend", `<option>${esc(r)}</option>`));
+
+function renderTable() {
+  const band = fband.value, rep = frep.value, t = norm(ftext.value), onlyPaid = fpaid.checked;
+  const tid = toId(ftext.value);
+  const rows = DATA.filter(a =>
+    (!band || a.band === band) && (!rep || a.rep === rep) && (!onlyPaid || a.paid) &&
+    (!t || (tid ? a.id === tid : norm(a.id).includes(t) || norm(a.name).includes(t))));
+  document.getElementById("count").textContent = `Showing ${fmt(rows.length)} of ${fmt(TOTAL)} accounts, sorted by rank`;
+  document.getElementById("rows").innerHTML = rows.map(a => `
+    <tr data-id="${esc(a.id)}">
+      <td class="num">${a.rank}</td><td>${esc(a.id)}</td>
+      <td>${esc(a.name)}${a.paid ? ' <span class="pill p-paid">Paying</span>' : ""}</td>
+      <td>${esc(a.rep)}</td><td class="num">${a.score}</td><td>${bandPill(a.band)}</td><td>${esc(a.reason)}</td>
+    </tr>`).join("");
+}
+document.getElementById("rows").addEventListener("click", e => {
+  const tr = e.target.closest("tr"); if (!tr) return;
+  showAccount(byId.get(tr.dataset.id)); result.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+[fband, frep, fpaid].forEach(el => el.addEventListener("change", renderTable));
+ftext.addEventListener("input", renderTable);
+
+const counts = DATA.reduce((m, a) => (m[a.band] = (m[a.band] || 0) + 1, m), {});
+document.getElementById("summary").textContent =
+  `${fmt(TOTAL)} accounts (${META.first} to ${META.last}) · Call now ${counts["Call now"] || 0} · ` +
+  `Call this week ${counts["Call this week"] || 0} · Nurture ${counts["Nurture"] || 0} · ` +
+  `Bands: Call now 80–100, Call this week 50–79, Nurture 0–49 · Built ${META.built}`;
+renderTable();
+}
+
+if (DATA_INLINE) start(DATA_INLINE);
+else fetch("data.json").then(r => r.json()).then(start).catch(() => {
+  document.getElementById("summary").textContent = "The account data could not be loaded. Reload the page to try again.";
+});
+</script>

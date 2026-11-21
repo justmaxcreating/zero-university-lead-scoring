@@ -13,3 +13,8 @@ output/*.cache.json
 __pycache__/
 .venv/
 venv/
+
+# Built rep page embeds all account data
+dashboard/index.html
+*.xlsx
+dashboard/artifact/
