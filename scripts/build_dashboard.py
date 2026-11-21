@@ -26,7 +26,7 @@ def main(src, out):
     meta = {"first": o.account_id.min(), "last": o.account_id.max(), "built": date.today().isoformat()}
     page = (ROOT / "dashboard" / "template.html").read_text().replace("/*META*/", json.dumps(meta))
     # Local copy: data embedded, opens straight from disk.
-    local = page.replace("/*DATA*/null", json.dumps(rows, ensure_ascii=False))
+    local = page.replace("/*DATA*/null", json.dumps(rows))
     Path(out).write_text('<!doctype html>\n<html lang="en">\n<meta charset="utf-8">\n'
                          '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
                          + local + "</html>\n")
@@ -34,7 +34,7 @@ def main(src, out):
     art = ROOT / "dashboard" / "artifact"
     art.mkdir(exist_ok=True)
     (art / "index.html").write_text(page)
-    (art / "data.json").write_text("[\n" + ",\n".join(json.dumps(r, ensure_ascii=False) for r in rows) + "\n]\n")
+    (art / "data.json").write_text("[\n" + ",\n".join(json.dumps(r) for r in rows) + "\n]\n")
     print(f"wrote {out} and {art}/: {len(rows)} accounts, {sum(r['paid'] for r in rows)} paying")
 
 

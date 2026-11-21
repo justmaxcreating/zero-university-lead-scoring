@@ -1,3 +1,4 @@
+<meta charset="utf-8">
 <title>Q3 2026 Call List</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,7 +84,7 @@
 </style>
 <main>
   <h1>Q3 2026 Call List</h1>
-  <p class="sub" id="summary">Loading 1,200 accounts…</p>
+  <p class="sub" id="summary">Loading 1,200 accounts&hellip;</p>
 
   <div class="grid">
     <section class="panel">
@@ -98,11 +99,11 @@
       </div>
       <div class="field">
         <label for="pick">Or pick from the list</label>
-        <select id="pick"><option value="">Choose an account…</option></select>
+        <select id="pick"><option value="">Choose an account&hellip;</option></select>
       </div>
       <div class="field">
         <label for="paidpick">Paying accounts (60)</label>
-        <select id="paidpick"><option value="">Choose a paying account…</option></select>
+        <select id="paidpick"><option value="">Choose a paying account&hellip;</option></select>
       </div>
       <div class="row">
         <button class="ghost" id="topstudent">Highest-ranked school / student account</button>
@@ -173,7 +174,7 @@ function showAccount(a) {
         <div class="stat"><div class="k">Call priority</div><div class="v" style="font-size:16px;padding-top:6px">${bandPill(a.band)}</div></div>
       </div>
       <div class="reason">${esc(a.reason)}</div>
-      <div class="meta">Rep: ${esc(a.rep)} · ${esc(a.domain)} (${esc(a.dtype)})</div>
+      <div class="meta">Rep: ${esc(a.rep)} \u00b7 ${esc(a.domain)} (${esc(a.dtype)})</div>
     </div>`;
 }
 
@@ -183,17 +184,17 @@ function showMessage(html) {
 
 function showMatches(list, query) {
   result.innerHTML = `<h2>Account</h2>
-    <p class="meta">${list.length} workspaces match “${esc(query)}”. Pick one:</p>
+    <p class="meta">${list.length} workspaces match \u201c${esc(query)}\u201d. Pick one:</p>
     <ul class="matches">${list.map(a =>
-      `<li data-id="${esc(a.id)}">#${fmt(a.rank)} · <strong>${esc(a.id)}</strong> · ${esc(a.name)} · ${esc(a.rep)} · ${a.score} ${bandPill(a.band)}</li>`).join("")}</ul>`;
+      `<li data-id="${esc(a.id)}">#${fmt(a.rank)} \u00b7 <strong>${esc(a.id)}</strong> \u00b7 ${esc(a.name)} \u00b7 ${esc(a.rep)} \u00b7 ${a.score} ${bandPill(a.band)}</li>`).join("")}</ul>`;
   result.querySelectorAll("li").forEach(li => li.addEventListener("click", () => showAccount(byId.get(li.dataset.id))));
 }
 
 function lookup(raw) {
   const text = String(raw || "");
   if (!text.trim()) { showMessage("Type an account ID like ACC-10587, or part of a workspace name."); return; }
-  // a datalist pick looks like "ACC-10587 · Workspace name"
-  const head = text.split("·")[0];
+  // a datalist pick looks like "ACC-10587 \u00b7 Workspace name"
+  const head = text.split("\u00b7")[0];
   const id = toId(head) || toId(text);
   if (id) {
     const a = byId.get(id);
@@ -205,7 +206,7 @@ function lookup(raw) {
   const hits = DATA.filter(a => norm(a.name).includes(q) || norm(a.domain).includes(q));
   if (hits.length === 1) { showAccount(hits[0]); return; }
   if (hits.length > 1) { showMatches(hits, text.trim()); return; }
-  showMessage(`No account ID or workspace name matches “${esc(text.trim())}”. Account IDs use the ACC-##### format.`);
+  showMessage(`No account ID or workspace name matches \u201c${esc(text.trim())}\u201d. Account IDs use the ACC-##### format.`);
 }
 
 function start(rows) {
@@ -214,19 +215,19 @@ function start(rows) {
 const q = document.getElementById("q");
 document.getElementById("go").addEventListener("click", () => lookup(q.value));
 q.addEventListener("keydown", e => { if (e.key === "Enter") lookup(q.value); });
-q.addEventListener("change", () => { if (q.value.includes("·")) lookup(q.value); });
+q.addEventListener("change", () => { if (q.value.includes("\u00b7")) lookup(q.value); });
 
 document.getElementById("names").innerHTML =
-  DATA.map(a => `<option value="${esc(a.id)} · ${esc(a.name)}"></option>`).join("");
+  DATA.map(a => `<option value="${esc(a.id)} \u00b7 ${esc(a.name)}"></option>`).join("");
 
 const pick = document.getElementById("pick");
 pick.insertAdjacentHTML("beforeend",
-  DATA.map(a => `<option value="${esc(a.id)}">#${a.rank} · ${esc(a.id)} · ${esc(a.name)}</option>`).join(""));
+  DATA.map(a => `<option value="${esc(a.id)}">#${a.rank} \u00b7 ${esc(a.id)} \u00b7 ${esc(a.name)}</option>`).join(""));
 pick.addEventListener("change", () => { if (pick.value) showAccount(byId.get(pick.value)); });
 
 const paidpick = document.getElementById("paidpick");
 paidpick.insertAdjacentHTML("beforeend",
-  DATA.filter(a => a.paid).map(a => `<option value="${esc(a.id)}">${esc(a.id)} · ${esc(a.name)} (${esc(a.plan)})</option>`).join(""));
+  DATA.filter(a => a.paid).map(a => `<option value="${esc(a.id)}">${esc(a.id)} \u00b7 ${esc(a.name)} (${esc(a.plan)})</option>`).join(""));
 paidpick.addEventListener("change", () => { if (paidpick.value) showAccount(byId.get(paidpick.value)); });
 
 document.getElementById("topstudent").addEventListener("click", () => {
@@ -262,9 +263,9 @@ ftext.addEventListener("input", renderTable);
 
 const counts = DATA.reduce((m, a) => (m[a.band] = (m[a.band] || 0) + 1, m), {});
 document.getElementById("summary").textContent =
-  `${fmt(TOTAL)} accounts (${META.first} to ${META.last}) · Call now ${counts["Call now"] || 0} · ` +
-  `Call this week ${counts["Call this week"] || 0} · Nurture ${counts["Nurture"] || 0} · ` +
-  `Bands: Call now 80–100, Call this week 50–79, Nurture 0–49 · Built ${META.built}`;
+  `${fmt(TOTAL)} accounts (${META.first} to ${META.last}) \u00b7 Call now ${counts["Call now"] || 0} \u00b7 ` +
+  `Call this week ${counts["Call this week"] || 0} \u00b7 Nurture ${counts["Nurture"] || 0} \u00b7 ` +
+  `Bands: Call now 80\u2013100, Call this week 50\u201379, Nurture 0\u201349 \u00b7 Built ${META.built}`;
 renderTable();
 }
 
