@@ -1,0 +1,12 @@
+# Secrets
+.env
+**/.env
+
+# Customer data stays local
+*.csv
+
+# OS / Python
+.DS_Store
+__pycache__/
+.venv/
+venv/
