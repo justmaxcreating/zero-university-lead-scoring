@@ -20,3 +20,8 @@ Customer CSV exports are gitignored and stay local.
 - `scripts/label_replies.py <replies.csv> <out.csv>`: labels each reply as `ready_to_buy`, `evaluating`, `not_now`, `not_interested` or `wrong_contact`, with `opt_out` and `auto_reply` flags.
 
 Scoring rules and the integration-points check are documented in the shared Google Doc "Lead Scoring System: Free Workspaces (Q3 2026)".
+- `scripts/llm_label_replies.py <replies.csv> <out.csv>`: labels replies with `nvidia/nemotron-3-ultra-550b-a55b:free` on OpenRouter using `prompts/label_replies.md`. The model sees only `reply_id` and `reply_body`; `account_id` is copied from the CSV by `reply_id`.
+
+## Output
+
+`output/reply_labels.csv` has one row per reply (840): `reply_id`, `account_id`, `label`, `confidence`, `rationale`. The labels were assigned by Claude following `prompts/label_replies.md`, because the free model was too slow, and match `scripts/label_replies.py` on all 840 rows.

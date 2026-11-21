@@ -4,6 +4,9 @@
 
 # Customer data stays local
 *.csv
+# Except the model's reply labels, which are published on purpose
+!output/reply_labels.csv
+output/*.cache.json
 
 # OS / Python
 .DS_Store
